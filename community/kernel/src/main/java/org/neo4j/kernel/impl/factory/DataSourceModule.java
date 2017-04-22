@@ -329,9 +329,9 @@ public class DataSourceModule
             }
 
             @Override
-            public Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId )
+            public Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId, boolean startNodeExternal, boolean endNodeExternal, byte machineId )
             {
-                return nodeManager.newRelationshipProxy( id, startNodeId, typeId, endNodeId );
+                return nodeManager.newRelationshipProxy( id, startNodeId, typeId, endNodeId, startNodeExternal, endNodeExternal, machineId );
             }
         };
     }

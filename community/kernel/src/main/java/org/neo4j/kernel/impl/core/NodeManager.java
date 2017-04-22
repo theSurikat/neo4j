@@ -63,9 +63,10 @@ public class NodeManager extends LifecycleAdapter implements EntityFactory
     }
 
     /** Returns a fully initialized proxy. */
-    public RelationshipProxy newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId )
+    public RelationshipProxy newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId, boolean startNodeExternal, boolean endNodeExternal, byte machineId )
     {
-        return new RelationshipProxy( relationshipActions, id, startNodeId, typeId, endNodeId );
+        // only location
+        return new RelationshipProxy( relationshipActions, id, startNodeId, typeId, endNodeId, startNodeExternal, endNodeExternal, machineId );
     }
 
     @Override
@@ -102,9 +103,9 @@ public class NodeManager extends LifecycleAdapter implements EntityFactory
         }
 
         @Override
-        public Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId )
+        public Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
         {
-            return NodeManager.this.newRelationshipProxy( id, startNodeId, typeId, endNodeId );
+            return NodeManager.this.newRelationshipProxy( id, startNodeId, typeId, endNodeId, startNodeExternal, endNodeExternal, machineId  );
         }
     }
 

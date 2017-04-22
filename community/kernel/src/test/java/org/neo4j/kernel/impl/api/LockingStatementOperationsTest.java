@@ -425,7 +425,7 @@ public class LockingStatementOperationsTest
             doAnswer( invocation -> {
                 RelationshipVisitor<RuntimeException> visitor =
                         (RelationshipVisitor<RuntimeException>) invocation.getArguments()[2];
-                visitor.visit( relationshipId, 0, lowId, highId );
+                visitor.visit( relationshipId, 0, lowId, highId, false, false, (byte) 0 );
                 return null;
             } ).when( entityReadOps ).relationshipVisit( any( KernelStatement.class ), anyLong(),
                     any( RelationshipVisitor.class ) );
@@ -447,7 +447,7 @@ public class LockingStatementOperationsTest
             doAnswer( invocation -> {
                 RelationshipVisitor<RuntimeException> visitor =
                         (RelationshipVisitor<RuntimeException>) invocation.getArguments()[2];
-                visitor.visit( relationshipId, 0, highId, lowId );
+                visitor.visit( relationshipId, 0, highId, lowId, false, false, (byte) 0 );
                 return null;
             } ).when( entityReadOps ).relationshipVisit( any( KernelStatement.class ), anyLong(),
                     any( RelationshipVisitor.class ) );

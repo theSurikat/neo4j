@@ -397,7 +397,7 @@ public class StorageLayer implements StoreReadLayer
         {
             throw new EntityNotFoundException( EntityType.RELATIONSHIP, relationshipId );
         }
-        relationshipVisitor.visit( relationshipId, record.getType(), record.getFirstNode(), record.getSecondNode() );
+        relationshipVisitor.visit( relationshipId, record.getType(), record.getFirstNode(), record.getSecondNode(), record.isFirstNodeExternal(), record.isSecondNodeExternal(), record.getMachineId() );
     }
 
     @Override

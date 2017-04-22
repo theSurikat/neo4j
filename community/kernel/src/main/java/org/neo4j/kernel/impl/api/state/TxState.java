@@ -543,7 +543,7 @@ public final class TxState implements TransactionState, RelationshipVisitor.Home
     }
 
     @Override
-    public void relationshipDoDelete( long id, int type, long startNodeId, long endNodeId )
+    public void relationshipDoDelete( long id, int type, long startNodeId, long endNodeId, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
     {
         if ( relationships().remove( id ) )
         {

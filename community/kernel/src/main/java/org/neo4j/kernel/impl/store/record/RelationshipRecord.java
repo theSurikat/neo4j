@@ -35,6 +35,10 @@ public class RelationshipRecord extends PrimitiveRecord
     private long secondNextRel;
     private boolean firstInFirstChain;
     private boolean firstInSecondChain;
+    private boolean firstNodeExternal = false;
+    private boolean secondNodeExternal = false;
+    private byte machineId;
+
 
     @Deprecated
     public RelationshipRecord( long id, long firstNode, long secondNode, int type )
@@ -43,6 +47,15 @@ public class RelationshipRecord extends PrimitiveRecord
         this.firstNode = firstNode;
         this.secondNode = secondNode;
         this.type = type;
+    }
+
+    @Deprecated
+    public RelationshipRecord( long id, long firstNode, long secondNode, int type,
+                               boolean firstNodeExternal, boolean secondNodeExternal, byte machineId)
+    {
+        this( id, firstNode, secondNode, type );
+        setExternal(firstNodeExternal, secondNodeExternal, machineId);
+
     }
 
     @Deprecated
@@ -58,6 +71,18 @@ public class RelationshipRecord extends PrimitiveRecord
         this.secondNextRel = secondNextRel;
         this.firstInFirstChain = firstInFirstChain;
         this.firstInSecondChain = firstInSecondChain;
+
+    }
+
+    @Deprecated
+    public RelationshipRecord( long id, boolean inUse, long firstNode, long secondNode, int type,
+                               long firstPrevRel, long firstNextRel, long secondPrevRel, long secondNextRel,
+                               boolean firstInFirstChain, boolean firstInSecondChain,
+                               boolean firstNodeExternal, boolean secondNodeExternal, byte machineId )
+    {
+        this( id, inUse, firstNode, secondNode, type, firstPrevRel, firstNextRel,
+                secondPrevRel, secondNextRel, firstInSecondChain, firstInSecondChain );
+        setExternal(firstNodeExternal, secondNodeExternal, machineId);
 
     }
 
@@ -83,12 +108,24 @@ public class RelationshipRecord extends PrimitiveRecord
         return this;
     }
 
+    public RelationshipRecord initialize( boolean inUse, long nextProp, long firstNode, long secondNode,
+                                          int type, long firstPrevRel, long firstNextRel, long secondPrevRel, long secondNextRel,
+                                          boolean firstInFirstChain, boolean firstInSecondChain,
+                                          boolean firstNodeExternal, boolean secondNodeExternal, byte machineId)
+    {
+        this.initialize(inUse, nextProp, firstNode, secondNode, type, firstPrevRel, firstNextRel, secondPrevRel, secondNextRel,
+                firstInFirstChain, firstInSecondChain);
+        setExternal(firstNodeExternal, secondNodeExternal, machineId);
+        return this;
+    }
+
     @Override
     public void clear()
     {
         initialize( false, NO_NEXT_PROPERTY.intValue(), -1, -1, -1,
                 1, NO_NEXT_RELATIONSHIP.intValue(),
-                1, NO_NEXT_RELATIONSHIP.intValue(), true, true );
+                1, NO_NEXT_RELATIONSHIP.intValue(), true, true,
+                false, false, (byte) 0);
     }
 
     public void setLinks( long firstNode, long secondNode, int type )
@@ -98,8 +135,24 @@ public class RelationshipRecord extends PrimitiveRecord
         this.type = type;
     }
 
+    private void setExternal(boolean firstNodeExternal, boolean secondNodeExternal, byte machineId)
+    {
+        this.firstNodeExternal = firstNodeExternal;
+        this.secondNodeExternal = secondNodeExternal;
+        this.machineId = machineId;
+    }
+
+    public void setLinks( long firstNode, long secondNode, int type,
+                          boolean firstNodeExternal, boolean secondNodeExternal, byte machineId)
+    {
+        setLinks(firstNode, secondNode, type);
+        setExternal(firstNodeExternal, secondNodeExternal, machineId);
+
+    }
+
     public long getFirstNode()
     {
+        if(this.firstNodeExternal) return -1;
         return firstNode;
     }
 
@@ -110,6 +163,7 @@ public class RelationshipRecord extends PrimitiveRecord
 
     public long getSecondNode()
     {
+        if(this.secondNodeExternal) return -1;
         return secondNode;
     }
 
@@ -188,6 +242,30 @@ public class RelationshipRecord extends PrimitiveRecord
         this.firstInSecondChain = firstInSecondChain;
     }
 
+    public boolean isFirstNodeExternal() {
+        return firstNodeExternal;
+    }
+
+    public void setFirstNodeExternal(boolean firstNodeExternal) {
+        this.firstNodeExternal = firstNodeExternal;
+    }
+
+    public boolean isSecondNodeExternal() {
+        return secondNodeExternal;
+    }
+
+    public void setSecondNodeExternal(boolean secondNodeExternal) {
+        this.secondNodeExternal = secondNodeExternal;
+    }
+
+    public byte getMachineId() {
+        return machineId;
+    }
+
+    public void setMachineId(byte machineId) {
+        this.machineId = machineId;
+    }
+
     @Override
     public String toString()
     {
@@ -211,7 +289,7 @@ public class RelationshipRecord extends PrimitiveRecord
     {
         RelationshipRecord record = new RelationshipRecord( getId() ).initialize( inUse(), nextProp, firstNode,
                 secondNode, type, firstPrevRel, firstNextRel, secondPrevRel, secondNextRel, firstInFirstChain,
-                firstInSecondChain );
+                firstInSecondChain, firstNodeExternal, secondNodeExternal, machineId);
         record.setSecondaryUnitId( getSecondaryUnitId() );
         return record;
     }
@@ -240,13 +318,16 @@ public class RelationshipRecord extends PrimitiveRecord
                secondPrevRel == that.secondPrevRel &&
                secondNextRel == that.secondNextRel &&
                firstInFirstChain == that.firstInFirstChain &&
-               firstInSecondChain == that.firstInSecondChain;
+               firstInSecondChain == that.firstInSecondChain &&
+               firstNodeExternal == that.firstNodeExternal &&
+               secondNodeExternal == that.secondNodeExternal &&
+               machineId == that.machineId;
     }
 
     @Override
     public int hashCode()
     {
         return Objects.hash( super.hashCode(), firstNode, secondNode, type, firstPrevRel, firstNextRel, secondPrevRel,
-                secondNextRel, firstInFirstChain, firstInSecondChain );
+                secondNextRel, firstInFirstChain, firstInSecondChain, firstNodeExternal, secondNodeExternal, machineId );
     }
 }

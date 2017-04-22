@@ -103,7 +103,7 @@ public abstract class RelationshipChangeVisitorAdapter implements DiffSetsVisito
         abstract void visit( long relationshipId ) throws ConstraintValidationException;
 
         @Override
-        public abstract void visit( long relId, int type, long startNode, long endNode )
+        public abstract void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
                 throws ConstraintValidationException;
     }
 
@@ -121,7 +121,7 @@ public abstract class RelationshipChangeVisitorAdapter implements DiffSetsVisito
             }
 
             @Override
-            public void visit( long relId, int type, long startNode, long endNode )
+            public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
                     throws ConstraintValidationException
             {
                 visitAddedRelationship( relId, type, startNode, endNode );
@@ -147,7 +147,7 @@ public abstract class RelationshipChangeVisitorAdapter implements DiffSetsVisito
             }
 
             @Override
-            public void visit( long relId, int type, long startNode, long endNode )
+            public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
             {
                 visitRemovedRelationship( relId, type, startNode, endNode );
             }

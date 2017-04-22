@@ -280,7 +280,7 @@ public class NeoStoresTest
         {
             long id = nextId( Relationship.class );
             transaction.relationshipDoCreate( id, relType1, nodeIds[i], nodeIds[i + 1] );
-            transaction.relationshipDoDelete( id, relType1, nodeIds[i], nodeIds[i + 1] );
+            transaction.relationshipDoDelete( id, relType1, nodeIds[i], nodeIds[i + 1], false, false, (byte) 0  );
         }
         for ( int i = 0; i < 3; i++ )
         {
@@ -391,8 +391,9 @@ public class NeoStoresTest
 
     private void relDelete( long id )
     {
-        RelationshipVisitor<RuntimeException> visitor = ( relId, type, startNode, endNode ) ->
-                transaction.relationshipDoDelete( relId, type, startNode, endNode );
+        //:TODO hack
+        RelationshipVisitor<RuntimeException> visitor = ( relId, type, startNode, endNode, startNodeExternal, endNodeExternal, machineId ) ->
+                transaction.relationshipDoDelete( relId, type, startNode, endNode, false, false, (byte) 0  );
         if ( !transaction.relationshipVisit( id, visitor ) )
         {
             try
@@ -1157,7 +1158,7 @@ public class NeoStoresTest
             storeLayer.relationshipVisit( rel, new RelationshipVisitor<RuntimeException>()
             {
                 @Override
-                public void visit( long relId, int type, long startNode, long endNode )
+                public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId )
                 {
                     assertEquals( firstNode, startNode );
                     assertEquals( secondNode, endNode );

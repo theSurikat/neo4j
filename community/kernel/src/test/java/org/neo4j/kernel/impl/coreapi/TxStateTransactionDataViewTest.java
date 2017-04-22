@@ -133,8 +133,8 @@ public class TxStateTransactionDataViewTest
     public void showsRemovedRelationships() throws Exception
     {
         // Given
-        state.relationshipDoDelete( 1L, 1, 1L, 2L );
-        state.relationshipDoDelete( 2L, 1, 1L, 1L );
+        state.relationshipDoDelete( 1L, 1, 1L, 2L, false, false, (byte) 0 );
+        state.relationshipDoDelete( 2L, 1, 1L, 1L, false, false, (byte) 0 );
 
         long noPropertyId = -1L;
         when( storeStatement.acquireSingleRelationshipCursor( 1L ) ).
@@ -172,7 +172,7 @@ public class TxStateTransactionDataViewTest
     public void correctlySaysRelIsDeleted() throws Exception
     {
         // Given
-        state.relationshipDoDelete( 1L, 1, 1L, 2L );
+        state.relationshipDoDelete( 1L, 1, 1L, 2L, false, false, (byte) 0 );
 
         Relationship rel = mock( Relationship.class );
         when( rel.getId() ).thenReturn( 1L );

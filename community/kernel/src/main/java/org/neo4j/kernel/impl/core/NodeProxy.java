@@ -77,7 +77,7 @@ public class NodeProxy implements Node
 
         void failTransaction();
 
-        Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId );
+        Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId, boolean startNodeExternal, boolean endNodeExternal, byte machineId );
     }
 
     private final NodeActions actions;
@@ -544,7 +544,8 @@ public class NodeProxy implements Node
             int relationshipTypeId = statement.tokenWriteOperations().relationshipTypeGetOrCreateForName( type.name() );
             long relationshipId = statement.dataWriteOperations()
                                            .relationshipCreate( relationshipTypeId, nodeId, otherNode.getId() );
-            return actions.newRelationshipProxy( relationshipId, nodeId, relationshipTypeId, otherNode.getId()  );
+            //:TODO hack
+            return actions.newRelationshipProxy( relationshipId, nodeId, relationshipTypeId, otherNode.getId(), false, false, (byte) 0  );
         }
         catch ( IllegalTokenNameException | RelationshipTypeIdNotFoundKernelException e )
         {

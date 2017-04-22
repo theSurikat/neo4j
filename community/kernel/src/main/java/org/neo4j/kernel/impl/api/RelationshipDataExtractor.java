@@ -25,14 +25,20 @@ public class RelationshipDataExtractor implements RelationshipVisitor<RuntimeExc
     private long startNode;
     private long endNode;
     private long relId;
+    private boolean startNodeExternal;
+    private boolean endNodeExternal;
+    private byte machineId;
 
     @Override
-    public void visit( long relId, int type, long startNode, long endNode )
+    public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId )
     {
         this.relId = relId;
         this.type = type;
         this.startNode = startNode;
         this.endNode = endNode;
+        this.startNodeExternal = startNodeExternal;
+        this.endNodeExternal = endNodeExternal;
+        this.machineId = machineId;
     }
 
     public int type()
@@ -70,5 +76,17 @@ public class RelationshipDataExtractor implements RelationshipVisitor<RuntimeExc
     public long relationship()
     {
         return relId;
+    }
+
+    public boolean isStartNodeExternal() {
+        return startNodeExternal;
+    }
+
+    public boolean isEndNodeExternal() {
+        return endNodeExternal;
+    }
+
+    public byte getMachineId() {
+        return machineId;
     }
 }

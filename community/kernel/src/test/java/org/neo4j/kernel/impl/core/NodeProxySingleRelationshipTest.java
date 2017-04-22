@@ -105,7 +105,7 @@ public class NodeProxySingleRelationshipTest
     {
         NodeProxy.NodeActions nodeActions = mock( NodeProxy.NodeActions.class );
         final RelationshipProxy.RelationshipActions relActions = mock( RelationshipProxy.RelationshipActions.class );
-        when( nodeActions.newRelationshipProxy( anyLong(), anyLong(), anyInt(), anyLong() ) ).then( invocation ->
+        when( nodeActions.newRelationshipProxy( anyLong(), anyLong(), anyInt(), anyLong(), false, false, (byte) 0 ) ).then( invocation ->
         {
             Long id = (Long) invocation.getArguments()[0];
             Long startNode = (Long) invocation.getArguments()[1];
@@ -153,7 +153,7 @@ public class NodeProxySingleRelationshipTest
                     public <EXCEPTION extends Exception> boolean relationshipVisit( long relationshipId,
                             RelationshipVisitor<EXCEPTION> visitor ) throws EXCEPTION
                     {
-                        visitor.visit( relId, 2, 1, 10 * relId + 2 );
+                        visitor.visit( relId, 2, 1, 10 * relId + 2,false, false, (byte) 0  );
                         return false;
                     }
                 } );

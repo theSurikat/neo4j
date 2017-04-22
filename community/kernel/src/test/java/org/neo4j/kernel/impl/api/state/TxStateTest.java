@@ -1063,8 +1063,8 @@ public class TxStateTest
         state.relationshipDoCreate( 12, relType + 1, startNode, endNode );
         state.relationshipDoCreate( 13, relType + 1, endNode, startNode );
 
-        state.relationshipDoDelete( 1337, relType, startNode, endNode );
-        state.relationshipDoDelete( 1338, relType + 1, startNode, startNode );
+        state.relationshipDoDelete( 1337, relType, startNode, endNode, false, false, (byte) 0 );
+        state.relationshipDoDelete( 1338, relType + 1, startNode, startNode, false, false, (byte) 0  );
 
         // Then
         assertEquals( 12, state.augmentNodeDegree( startNode, 10, Direction.BOTH ) );
@@ -1084,8 +1084,8 @@ public class TxStateTest
         state.relationshipDoCreate( relB, relType, startNode, endNode );
         state.relationshipDoCreate( relC, relType + 1, startNode, endNode );
 
-        state.relationshipDoDelete( relB, relType, startNode, endNode );
-        state.relationshipDoDelete( relC, relType + 1, startNode, endNode );
+        state.relationshipDoDelete( relB, relType, startNode, endNode, false, false, (byte) 0  );
+        state.relationshipDoDelete( relC, relType + 1, startNode, endNode, false, false, (byte) 0  );
 
         // Then
         assertThat( toList( state.nodeRelationshipTypes( startNode ).iterator() ), equalTo( asList( relType ) ) );
@@ -1166,7 +1166,7 @@ public class TxStateTest
     {
         // GIVEN
         state.relationshipDoCreate( 0, 0, 1, 2 );
-        state.relationshipDoDelete( 0, 0, 1, 2 );
+        state.relationshipDoDelete( 0, 0, 1, 2, false, false, (byte) 0 );
         state.relationshipDoCreate( 1, 0, 2, 3 );
 
         // WHEN
@@ -1190,7 +1190,7 @@ public class TxStateTest
     public void shouldVisitDeletedRelationship() throws Exception
     {
         // Given
-        state.relationshipDoDelete( 42, 2, 3, 4 );
+        state.relationshipDoDelete( 42, 2, 3, 4 ,false, false, (byte) 0 );
 
         // When
         state.accept( new TxStateVisitor.Adapter()
@@ -1214,8 +1214,8 @@ public class TxStateTest
         long endNodeId = 4;
 
         // When
-        state.relationshipDoCreate( relationshipId, relationshipType, startNodeId, endNodeId );
-        state.relationshipDoDelete( relationshipId, relationshipType, startNodeId, endNodeId );
+        state.relationshipDoCreate( relationshipId, relationshipType, startNodeId, endNodeId);
+        state.relationshipDoDelete( relationshipId, relationshipType, startNodeId, endNodeId, false, false, (byte) 0  );
 
         // Then
         assertTrue( state.relationshipIsDeletedInThisTx( relationshipId ) );
@@ -1338,7 +1338,7 @@ public class TxStateTest
                 state.relationshipDoDelete( /*id=*/random.nextInt( 1 << 20 ),
                                             /*type=*/random.nextInt( 128 ),
                                             /*startNode=*/random.nextInt( 1 << 20 ),
-                                            /*endNode=*/random.nextInt( 1 << 20 ) );
+                                            /*endNode=*/random.nextInt( 1 << 20 ), false, false, (byte) 0  );
             }
 
             // then
@@ -1436,7 +1436,7 @@ public class TxStateTest
                 RelationshipItem relationship = Iterables
                         .fromEnd( committedRelationships.values(), random.nextInt( committedRelationships.size() ) );
                 state.relationshipDoDelete( relationship.id(), relationship.type(), relationship.startNode(),
-                        relationship.endNode() );
+                        relationship.endNode(), false, false, (byte) 0  );
                 allRelationships.remove( relationship.id() );
             }
         }

@@ -75,11 +75,21 @@ public class RelationshipProxy implements Relationship, RelationshipVisitor<Runt
     private long startNode = AbstractBaseRecord.NO_ID;
     private long endNode = AbstractBaseRecord.NO_ID;
     private int type;
+    private boolean firstNodeExternal = false;
+    private boolean secondNodeExternal = false;
+    private byte machineId;
 
+    //:TODO delete this tomfoolery
     public RelationshipProxy( RelationshipActions actions, long id, long startNode, int type, long endNode )
     {
         this.actions = actions;
-        visit( id, type, startNode, endNode );
+        visit( id, type, startNode, endNode, false, false, (byte) 0 );
+    }
+
+    public RelationshipProxy( RelationshipActions actions, long id, long startNode, int type, long endNode, boolean firstNodeExternal, boolean secondNodeExternal, byte machineId)
+    {
+        this.actions = actions;
+        visit( id, type, startNode, endNode, firstNodeExternal, secondNodeExternal, machineId);
     }
 
     public RelationshipProxy( RelationshipActions actions, long id )
@@ -89,12 +99,15 @@ public class RelationshipProxy implements Relationship, RelationshipVisitor<Runt
     }
 
     @Override
-    public void visit( long id, int type, long startNode, long endNode ) throws RuntimeException
+    public void visit( long id, int type, long startNode, long endNode, boolean firstNodeExternal, boolean secondNodeExternal, byte machineId) throws RuntimeException
     {
         this.id = id;
         this.type = type;
         this.startNode = startNode;
         this.endNode = endNode;
+        this.firstNodeExternal = firstNodeExternal;
+        this.secondNodeExternal = secondNodeExternal;
+        this.machineId = machineId;
     }
 
     private void initializeData()
@@ -229,6 +242,21 @@ public class RelationshipProxy implements Relationship, RelationshipVisitor<Runt
     {
         assertInUnterminatedTransaction();
         return actions.getRelationshipTypeById( typeId() );
+    }
+
+    @Override
+    public byte getMachineId() {
+        return machineId;
+    }
+
+    @Override
+    public boolean isFirstNodeExternal() {
+        return firstNodeExternal;
+    }
+
+    @Override
+    public boolean isSecondNodeExternal() {
+        return secondNodeExternal;
     }
 
     @Override

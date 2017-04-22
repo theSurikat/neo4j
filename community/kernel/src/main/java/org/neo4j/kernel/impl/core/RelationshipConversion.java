@@ -40,9 +40,9 @@ public class RelationshipConversion implements RelationshipVisitor<RuntimeExcept
     }
 
     @Override
-    public void visit( long relId, int type, long startNode, long endNode ) throws RuntimeException
+    public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId ) throws RuntimeException
     {
-        next = actions.newRelationshipProxy( relId, startNode, type, endNode );
+        next = actions.newRelationshipProxy( relId, startNode, type, endNode, startNodeExternal, endNodeExternal, machineId );
     }
 
     @Override
@@ -75,4 +75,6 @@ public class RelationshipConversion implements RelationshipVisitor<RuntimeExcept
     {
         statement.close();
     }
+
+
 }

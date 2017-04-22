@@ -323,7 +323,7 @@ public class LockingStatementOperations implements
     {
         entityReadDelegate.relationshipVisit(state, relationshipId, new RelationshipVisitor<RuntimeException>() {
             @Override
-            public void visit(long relId, int type, long startNode, long endNode)
+            public void visit(long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId )
             {
                 lockRelationshipNodes(state, startNode, endNode);
             }

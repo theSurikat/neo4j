@@ -480,7 +480,7 @@ public class StateHandlingStatementOperations implements
             else
             {
                 txState.relationshipDoDelete( relationship.id(), relationship.type(), relationship.startNode(),
-                        relationship.endNode() );
+                        relationship.endNode(), relationship.isStartNodeExternal(), relationship.isEndNodeExternal(), relationship.machineId() );
             }
         }
     }
@@ -1586,12 +1586,14 @@ public class StateHandlingStatementOperations implements
         relationshipVisit( statement, relationship, new RelationshipVisitor<LegacyIndexNotFoundKernelException>()
         {
             @Override
-            public void visit( long relId, int type, long startNode, long endNode )
+            public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
                     throws LegacyIndexNotFoundKernelException
             {
                 statement.legacyIndexTxState().relationshipChanges( indexName ).addRelationship(
                         relationship, key, value, startNode, endNode );
             }
+
+
         } );
     }
 
@@ -1607,7 +1609,7 @@ public class StateHandlingStatementOperations implements
             relationshipVisit( statement, relationship, new RelationshipVisitor<LegacyIndexNotFoundKernelException>()
             {
                 @Override
-                public void visit( long relId, int type, long startNode, long endNode )
+                public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
                         throws LegacyIndexNotFoundKernelException
                 {
                     statement.legacyIndexTxState().relationshipChanges( indexName ).removeRelationship(
@@ -1631,7 +1633,7 @@ public class StateHandlingStatementOperations implements
             relationshipVisit( statement, relationship, new RelationshipVisitor<LegacyIndexNotFoundKernelException>()
             {
                 @Override
-                public void visit( long relId, int type, long startNode, long endNode )
+                public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
                         throws LegacyIndexNotFoundKernelException
                 {
                     statement.legacyIndexTxState().relationshipChanges( indexName ).removeRelationship(
@@ -1655,7 +1657,7 @@ public class StateHandlingStatementOperations implements
             relationshipVisit( statement, relationship, new RelationshipVisitor<LegacyIndexNotFoundKernelException>()
             {
                 @Override
-                public void visit( long relId, int type, long startNode, long endNode )
+                public void visit( long relId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
                         throws LegacyIndexNotFoundKernelException
                 {
                     statement.legacyIndexTxState().relationshipChanges( indexName ).removeRelationship(

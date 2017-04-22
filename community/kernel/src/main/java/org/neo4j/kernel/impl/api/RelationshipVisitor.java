@@ -22,7 +22,7 @@ package org.neo4j.kernel.impl.api;
 /**
  * Visitor of relationship data.
  *
- * @param <EXCEPTION> exception thrown from the {@link #visit(long, int, long, long)} method.
+ * @param <EXCEPTION> exception thrown from the {@link #visit(long, int, long, long, boolean, boolean, byte)} method.
  */
 public interface RelationshipVisitor<EXCEPTION extends Exception>
 {
@@ -43,5 +43,5 @@ public interface RelationshipVisitor<EXCEPTION extends Exception>
      * @param startNodeId id of start node of the relationship.
      * @param endNodeId id of the end node of the relationship.
      */
-    void visit( long relationshipId, int typeId, long startNodeId, long endNodeId ) throws EXCEPTION;
+    void visit( long relationshipId, int typeId, long startNodeId, long endNodeId, boolean startNodeExternal, boolean endNodeExternal, byte machineId ) throws EXCEPTION;
 }

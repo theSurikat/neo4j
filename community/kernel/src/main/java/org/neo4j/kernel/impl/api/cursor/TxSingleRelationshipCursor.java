@@ -51,7 +51,7 @@ public class TxSingleRelationshipCursor extends TxAbstractRelationshipCursor
         if ( state.relationshipIsDeletedInThisTx( nextId ) )
         {
             visit( StatementConstants.NO_SUCH_RELATIONSHIP, StatementConstants.NO_SUCH_RELATIONSHIP_TYPE,
-                    StatementConstants.NO_SUCH_NODE, StatementConstants.NO_SUCH_NODE );
+                    StatementConstants.NO_SUCH_NODE, StatementConstants.NO_SUCH_NODE, false, false, (byte) 0 );
             nextId = StatementConstants.NO_SUCH_RELATIONSHIP;
             return false;
         }
@@ -68,7 +68,8 @@ public class TxSingleRelationshipCursor extends TxAbstractRelationshipCursor
             else
             {
                 RelationshipItem relationshipItem = cursor.get();
-                visit( nextId, relationshipItem.type(), relationshipItem.startNode(), relationshipItem.endNode() );
+                visit( nextId, relationshipItem.type(), relationshipItem.startNode(), relationshipItem.endNode()
+                        , relationshipItem.isStartNodeExternal(), relationshipItem.isEndNodeExternal(), relationshipItem.machineId() );
             }
             relationshipState = state.getRelationshipState( nextId );
             return true;
@@ -76,7 +77,7 @@ public class TxSingleRelationshipCursor extends TxAbstractRelationshipCursor
         else
         {
             visit( StatementConstants.NO_SUCH_RELATIONSHIP, StatementConstants.NO_SUCH_RELATIONSHIP_TYPE,
-                    StatementConstants.NO_SUCH_NODE, StatementConstants.NO_SUCH_NODE );
+                    StatementConstants.NO_SUCH_NODE, StatementConstants.NO_SUCH_NODE, false, false, (byte) 0 );
             relationshipState = null;
             nextId = StatementConstants.NO_SUCH_RELATIONSHIP;
             return false;

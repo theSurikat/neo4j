@@ -32,6 +32,9 @@ public class RelationshipStateImpl extends PropertyContainerStateImpl implements
     private long startNode = -1;
     private long endNode = -1;
     private int type = -1;
+    private boolean startNodeExternal = false;
+    private boolean endNodeExternal = false;
+    private byte machineId;
 
     RelationshipStateImpl( long id )
     {
@@ -50,7 +53,7 @@ public class RelationshipStateImpl extends PropertyContainerStateImpl implements
     {
         if ( type != -1 )
         {
-            visitor.visit( getId(), type, startNode, endNode );
+            visitor.visit( getId(), type, startNode, endNode, startNodeExternal, endNodeExternal, machineId );
             return true;
         }
         return false;

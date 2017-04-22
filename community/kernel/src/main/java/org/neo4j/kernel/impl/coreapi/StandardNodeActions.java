@@ -75,8 +75,8 @@ public class StandardNodeActions implements NodeProxy.NodeActions
     }
 
     @Override
-    public Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId )
+    public Relationship newRelationshipProxy( long id, long startNodeId, int typeId, long endNodeId, boolean startNodeExternal, boolean endNodeExternal, byte machineId  )
     {
-        return new RelationshipProxy( relationshipActions, id, startNodeId, typeId, endNodeId );
+        return new RelationshipProxy( relationshipActions, id, startNodeId, typeId, endNodeId, startNodeExternal, endNodeExternal, machineId  );
     }
 }

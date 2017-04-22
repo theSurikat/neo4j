@@ -34,7 +34,7 @@ public class RelationshipRecordFormat extends BaseOneByteHeaderRecordFormat<Rela
     // directed|in_use(byte)+first_node(int)+second_node(int)+rel_type(int)+
     // first_prev_rel_id(int)+first_next_rel_id+second_prev_rel_id(int)+
     // second_next_rel_id+next_prop_id(int)+first-in-chain-markers(1)
-    public static final int RECORD_SIZE = 34;
+    public static final int RECORD_SIZE = 36;
 
     public RelationshipRecordFormat()
     {
@@ -89,6 +89,9 @@ public class RelationshipRecordFormat extends BaseOneByteHeaderRecordFormat<Rela
 
             byte extraByte = cursor.getByte();
 
+            byte externalByte = cursor.getByte();
+            byte machineId = cursor.getByte();
+
             record.initialize( inUse,
                     BaseRecordFormat.longFromIntAndMod( nextProp, nextPropMod ),
                     BaseRecordFormat.longFromIntAndMod( firstNode, firstNodeMod ),
@@ -99,7 +102,10 @@ public class RelationshipRecordFormat extends BaseOneByteHeaderRecordFormat<Rela
                     BaseRecordFormat.longFromIntAndMod( secondPrevRel, secondPrevRelMod ),
                     BaseRecordFormat.longFromIntAndMod( secondNextRel, secondNextRelMod ),
                     (extraByte & 0x1) != 0,
-                    (extraByte & 0x2) != 0 );
+                    (extraByte & 0x2) != 0,
+                    (externalByte & 0x1) != 0,
+                    (externalByte & 0x2) != 0,
+                    machineId );
         }
     }
 
@@ -107,10 +113,9 @@ public class RelationshipRecordFormat extends BaseOneByteHeaderRecordFormat<Rela
     public void write( RelationshipRecord record, PageCursor cursor, int recordSize )
             throws IOException
     {
-        if ( record.inUse() )
-        {
+        if ( record.inUse() ) {
             long firstNode = record.getFirstNode();
-            short firstNodeMod = (short)((firstNode & 0x700000000L) >> 31);
+            short firstNodeMod = (short) ((firstNode & 0x700000000L) >> 31);
 
             long secondNode = record.getSecondNode();
             long secondNodeMod = (secondNode & 0x700000000L) >> 4;
@@ -133,7 +138,7 @@ public class RelationshipRecordFormat extends BaseOneByteHeaderRecordFormat<Rela
             // [    ,   x] in use flag
             // [    ,xxx ] first node high order bits
             // [xxxx,    ] next prop high order bits
-            short inUseUnsignedByte = (short)((record.inUse() ? Record.IN_USE : Record.NOT_IN_USE).byteValue() | firstNodeMod | nextPropMod);
+            short inUseUnsignedByte = (short) ((record.inUse() ? Record.IN_USE : Record.NOT_IN_USE).byteValue() | firstNodeMod | nextPropMod);
 
             // [ xxx,    ][    ,    ][    ,    ][    ,    ] second node high order bits,     0x70000000
             // [    ,xxx ][    ,    ][    ,    ][    ,    ] first prev rel high order bits,  0xE000000
@@ -141,7 +146,7 @@ public class RelationshipRecordFormat extends BaseOneByteHeaderRecordFormat<Rela
             // [    ,    ][  xx,x   ][    ,    ][    ,    ] second prev rel high order bits, 0x380000
             // [    ,    ][    , xxx][    ,    ][    ,    ] second next rel high order bits, 0x70000
             // [    ,    ][    ,    ][xxxx,xxxx][xxxx,xxxx] type
-            int typeInt = (int)(record.getType() | secondNodeMod | firstPrevRelMod | firstNextRelMod | secondPrevRelMod | secondNextRelMod);
+            int typeInt = (int) (record.getType() | secondNodeMod | firstPrevRelMod | firstNextRelMod | secondPrevRelMod | secondNextRelMod);
 
             // [    ,   x] 1:st in start node chain, 0x1
             // [    ,  x ] 1:st in end node chain,   0x2
@@ -149,16 +154,23 @@ public class RelationshipRecordFormat extends BaseOneByteHeaderRecordFormat<Rela
             long firstInEndNodeChain = record.isFirstInSecondChain() ? 0x2 : 0;
             byte extraByte = (byte) (firstInEndNodeChain | firstInStartNodeChain);
 
-            cursor.putByte( (byte)inUseUnsignedByte );
-            cursor.putInt( (int) firstNode );
-            cursor.putInt( (int) secondNode );
-            cursor.putInt( typeInt );
-            cursor.putInt( (int) firstPrevRel );
-            cursor.putInt( (int) firstNextRel );
-            cursor.putInt( (int) secondPrevRel );
-            cursor.putInt( (int) secondNextRel );
-            cursor.putInt( (int) nextProp );
-            cursor.putByte( extraByte );
+            long firstNodeExternal = record.isFirstNodeExternal() ? 0x1 : 0;
+            long secondNodeExternal = record.isSecondNodeExternal() ? 0x2 : 0;
+            byte externalByte = (byte) (firstNodeExternal | secondNodeExternal);
+            byte machineId = record.getMachineId();
+
+            cursor.putByte((byte) inUseUnsignedByte);
+            cursor.putInt((int) firstNode);
+            cursor.putInt((int) secondNode);
+            cursor.putInt(typeInt);
+            cursor.putInt((int) firstPrevRel);
+            cursor.putInt((int) firstNextRel);
+            cursor.putInt((int) secondPrevRel);
+            cursor.putInt((int) secondNextRel);
+            cursor.putInt((int) nextProp);
+            cursor.putByte(extraByte);
+            cursor.putByte(externalByte);
+            cursor.putByte(machineId);
         }
         else
         {

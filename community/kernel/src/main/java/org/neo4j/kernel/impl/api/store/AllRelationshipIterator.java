@@ -41,7 +41,7 @@ public class AllRelationshipIterator extends HighIdAwareIterator<RelationshipSto
     public <EXCEPTION extends Exception> boolean relationshipVisit( long relationshipId,
             RelationshipVisitor<EXCEPTION> visitor ) throws EXCEPTION
     {
-        visitor.visit( relationshipId, record.getType(), record.getFirstNode(), record.getSecondNode() );
+        visitor.visit( relationshipId, record.getType(), record.getFirstNode(), record.getSecondNode(), record.isFirstNodeExternal(), record.isSecondNodeExternal(), record.getMachineId() );
         return false;
     }
 

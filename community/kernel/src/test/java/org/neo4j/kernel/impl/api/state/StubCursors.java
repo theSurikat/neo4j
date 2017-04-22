@@ -133,7 +133,7 @@ public class StubCursors
         }
     }
 
-    public static RelationshipItem relationship( long id, int type, long start, long end )
+    public static RelationshipItem relationship( long id, int type, long start, long end)
     {
         return new RelationshipItem()
         {
@@ -179,6 +179,21 @@ public class StubCursors
             public long nextPropertyId()
             {
                 throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean isStartNodeExternal() {
+                return false;
+            }
+
+            @Override
+            public boolean isEndNodeExternal() {
+                return false;
+            }
+
+            @Override
+            public byte machineId() {
+                return 0;
             }
 
             @Override
@@ -228,6 +243,21 @@ public class StubCursors
             public long nextPropertyId()
             {
                 return propertyId;
+            }
+
+            @Override
+            public boolean isStartNodeExternal() {
+                return false;
+            }
+
+            @Override
+            public boolean isEndNodeExternal() {
+                return false;
+            }
+
+            @Override
+            public byte machineId() {
+                return 0;
             }
 
             @Override

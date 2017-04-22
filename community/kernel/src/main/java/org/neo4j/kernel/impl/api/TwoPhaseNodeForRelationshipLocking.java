@@ -125,8 +125,9 @@ class TwoPhaseNodeForRelationshipLocking
         {
             firstRelId = rel.id();
         }
-
-        nodeIds.add( rel.startNode() );
-        nodeIds.add( rel.endNode() );
+        if(rel.startNode() != -1)
+            nodeIds.add( rel.startNode() );
+        if(rel.endNode() != -1)
+            nodeIds.add( rel.endNode() );
     }
 }

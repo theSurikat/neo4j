@@ -44,7 +44,7 @@ public interface TransactionState extends ReadableTransactionState
 
     void nodeDoCreate( long id );
 
-    void relationshipDoDelete( long relationshipId, int type, long startNode, long endNode );
+    void relationshipDoDelete( long relationshipId, int type, long startNode, long endNode, boolean startNodeExternal, boolean endNodeExternal, byte machineId  );
 
     void relationshipDoDeleteAddedInThisTx( long relationshipId );
 

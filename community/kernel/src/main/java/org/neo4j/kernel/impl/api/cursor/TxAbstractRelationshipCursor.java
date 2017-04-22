@@ -47,6 +47,9 @@ public abstract class TxAbstractRelationshipCursor
     private int type;
     private long startNodeId;
     private long endNodeId;
+    private boolean startExternal = false;
+    private boolean endExternal = false;
+    private byte machineId;
 
     RelationshipState relationshipState;
     boolean relationshipIsAddedInThisTx;
@@ -75,12 +78,15 @@ public abstract class TxAbstractRelationshipCursor
     }
 
     @Override
-    public void visit( long relId, int type, long startNode, long endNode ) throws RuntimeException
+    public void visit( long relId, int type, long startNode, long endNode, boolean startExternal, boolean endExternal, byte machineId ) throws RuntimeException
     {
         this.id = relId;
         this.type = type;
         this.startNodeId = startNode;
         this.endNodeId = endNode;
+        this.startExternal = startExternal;
+        this.endExternal = endExternal;
+        this.machineId = machineId;
     }
 
     @Override
@@ -126,6 +132,21 @@ public abstract class TxAbstractRelationshipCursor
     public long nextPropertyId()
     {
         return relationshipIsAddedInThisTx ? NO_NEXT_PROPERTY.longValue() : cursor.get().nextPropertyId();
+    }
+
+    @Override
+    public boolean isStartNodeExternal() {
+        return startExternal;
+    }
+
+    @Override
+    public boolean isEndNodeExternal() {
+        return endExternal;
+    }
+
+    @Override
+    public byte machineId() {
+        return machineId;
     }
 
     @Override

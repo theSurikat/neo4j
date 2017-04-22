@@ -56,5 +56,11 @@ public interface RelationshipItem
 
     long nextPropertyId();
 
+    boolean isStartNodeExternal();
+
+    boolean isEndNodeExternal();
+
+    byte machineId();
+
     Lock lock();
 }

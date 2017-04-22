@@ -68,7 +68,8 @@ public class TxIteratorRelationshipCursor extends TxAbstractRelationshipCursor
                     continue;
                 }
 
-                visit( id, relationshipItem.type(), relationshipItem.startNode(), relationshipItem.endNode() );
+                visit( id, relationshipItem.type(), relationshipItem.startNode(), relationshipItem.endNode()
+                        , relationshipItem.isStartNodeExternal(), relationshipItem.isEndNodeExternal(), relationshipItem.machineId() );
                 relationshipState = state.getRelationshipState( relationshipItem.id() );
                 return true;
             }
@@ -85,7 +86,7 @@ public class TxIteratorRelationshipCursor extends TxAbstractRelationshipCursor
         }
         else
         {
-            visit( -1, -1, -1, -1 );
+            visit( -1, -1, -1, -1, false, false, (byte) 0 );
             relationshipState = null;
             return false;
         }

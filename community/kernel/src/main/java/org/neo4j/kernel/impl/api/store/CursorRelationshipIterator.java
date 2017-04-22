@@ -39,6 +39,9 @@ public class CursorRelationshipIterator implements RelationshipIterator, Resourc
     private int type;
     private long startNode;
     private long endNode;
+    private boolean endNodeExternal = false;
+    private boolean startNodeExternal = false;
+    private byte machineId;
 
     public CursorRelationshipIterator( Cursor<RelationshipItem> resourceCursor )
     {
@@ -83,6 +86,9 @@ public class CursorRelationshipIterator implements RelationshipIterator, Resourc
                 type = item.type();
                 startNode = item.startNode();
                 endNode = item.endNode();
+                endNodeExternal = item.isEndNodeExternal();
+                startNodeExternal = item.isStartNodeExternal();
+                machineId = item.machineId();
 
                 return item.id();
             }
@@ -98,7 +104,7 @@ public class CursorRelationshipIterator implements RelationshipIterator, Resourc
     public <EXCEPTION extends Exception> boolean relationshipVisit( long relationshipId,
             RelationshipVisitor<EXCEPTION> visitor ) throws EXCEPTION
     {
-        visitor.visit( id, type, startNode, endNode );
+        visitor.visit( id, type, startNode, endNode, startNodeExternal, endNodeExternal, machineId );
         return false;
     }
 

@@ -123,7 +123,7 @@ public abstract class CompiledExpandUtils
             public <EXCEPTION extends Exception> boolean relationshipVisit( long relationshipId,
                     RelationshipVisitor<EXCEPTION> visitor ) throws EXCEPTION
             {
-                visitor.visit( extractor.relationship(), extractor.type(), extractor.startNode(), extractor.endNode() );
+                visitor.visit( extractor.relationship(), extractor.type(), extractor.startNode(), extractor.endNode(), extractor.isStartNodeExternal(), extractor.isEndNodeExternal(), extractor.getMachineId() );
                 return false;
             }
 

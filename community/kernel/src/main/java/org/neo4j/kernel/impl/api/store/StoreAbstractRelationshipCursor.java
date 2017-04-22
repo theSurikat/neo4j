@@ -91,6 +91,21 @@ public abstract class StoreAbstractRelationshipCursor implements Cursor<Relation
     }
 
     @Override
+    public boolean isStartNodeExternal() {
+        return relationshipRecord.isFirstNodeExternal();
+    }
+
+    @Override
+    public boolean isEndNodeExternal() {
+        return relationshipRecord.isSecondNodeExternal();
+    }
+
+    @Override
+    public byte machineId() {
+        return relationshipRecord.getMachineId();
+    }
+
+    @Override
     public Lock lock()
     {
         Lock lock = lockService.acquireRelationshipLock( relationshipRecord.getId(), LockService.LockType.READ_LOCK );

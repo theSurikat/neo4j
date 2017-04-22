@@ -156,6 +156,22 @@ public interface Relationship extends Entity
     RelationshipType getType();
 
     /**
+     * Returns the machine id for the external node
+     * @return
+     */
+    byte getMachineId();
+
+    /**
+     * Returns if first node is external
+     */
+    boolean isFirstNodeExternal();
+
+    /**
+     * Returns if first node is external
+     */
+    boolean isSecondNodeExternal();
+
+    /**
      * Indicates whether this relationship is of the type <code>type</code>.
      * This is a convenience method that checks for equality using the contract
      * specified by RelationshipType, i.e. by checking for equal
@@ -227,4 +243,6 @@ public interface Relationship extends Entity
         }
         throw new NotFoundException( "Node[" + id + "] not connected to this relationship[" + getId() + "]" );
     }
+
+
 }

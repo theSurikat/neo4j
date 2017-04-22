@@ -176,7 +176,7 @@ public class SchemaProcedure
     }
 
     private RelationshipImpl addRelationship( NodeImpl startNode, NodeImpl endNode, String relType,
-            final Map<String,Set<RelationshipImpl>> relationshipMap )
+            final Map<String,Set<RelationshipImpl>> relationshipMap)
     {
         Set<RelationshipImpl> relationshipsForType;
         if ( !relationshipMap.containsKey( relType ) )
@@ -188,7 +188,8 @@ public class SchemaProcedure
         {
             relationshipsForType = relationshipMap.get( relType );
         }
-        RelationshipImpl relationship = new RelationshipImpl( startNode, endNode, relType );
+        //:TODO hack
+        RelationshipImpl relationship = new RelationshipImpl( startNode, endNode, relType, false, false, (byte) 0 );
         if ( !relationshipsForType.contains( relationship ) )
         {
             relationshipsForType.add( relationship );
@@ -215,13 +216,16 @@ public class SchemaProcedure
     {
 
         private static AtomicLong MIN_ID = new AtomicLong( -1 );
-
+        //:TODO geveret2
         private final long id;
         private final Node startNode;
         private final Node endNode;
         private final RelationshipType relationshipType;
+        private final boolean startNodeExternal;
+        private final boolean endNodeExternal;
+        private final byte machineId;
 
-        RelationshipImpl( final NodeImpl startNode, final NodeImpl endNode, final String type )
+        RelationshipImpl( final NodeImpl startNode, final NodeImpl endNode, final String type, final boolean startNodeExternal, final boolean endNodeExternal, final byte machineId )
         {
             this.id = MIN_ID.getAndDecrement();
             this.startNode = startNode;
@@ -234,6 +238,9 @@ public class SchemaProcedure
                     return type;
                 }
             };
+            this.startNodeExternal = startNodeExternal;
+            this.endNodeExternal = endNodeExternal;
+            this.machineId = machineId;
         }
 
         @Override
@@ -258,6 +265,21 @@ public class SchemaProcedure
         public RelationshipType getType()
         {
             return relationshipType;
+        }
+
+        @Override
+        public byte getMachineId() {
+            return machineId;
+        }
+
+        @Override
+        public boolean isFirstNodeExternal() {
+            return startNodeExternal;
+        }
+
+        @Override
+        public boolean isSecondNodeExternal() {
+            return endNodeExternal;
         }
 
         @Override
